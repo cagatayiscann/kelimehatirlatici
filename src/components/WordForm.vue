@@ -1,26 +1,31 @@
 <script setup lang="ts">
+import { Word } from '@/types/words';
 import { ref } from 'vue';
 
+export interface CreateWordDTO {
+  word: string
+  meaning: string
+}
 
-const word = ref('');
-const meaning = ref('');
+const word = ref<CreateWordDTO>({ word: '', meaning: ''});
+
+
 
 const emit = defineEmits<{
     (e: 'add-word', word: string, meaning: string): void;
 }>();
 
 const handleSubmit = () => {
-    emit('add-word', word.value, meaning.value);
-    word.value = '';
-    meaning.value = '';
+    emit('add-word', word.value.word, word.value.meaning);
+    word.value = { word: '', meaning: '' };
 };
 
 </script>
 <template>
 <div class="word-form">
         <form class="form-group" @submit.prevent="handleSubmit">
-            <input v-model="word" placeholder="Kelime girin" />
-            <input v-model="meaning" placeholder="Anlamını girin" />
+            <input v-model="word.word" placeholder="Kelime girin" />
+            <input v-model="word.meaning" placeholder="Anlamını girin" />
             <button type="submit">Ekle</button>
         </form>
     </div>
