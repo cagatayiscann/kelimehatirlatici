@@ -46,10 +46,14 @@ const loadWordsFromLocalStorage = () => {
     }
 };
 
-if (words.value.length === 0) {
-    onMounted(() => {
-        loadWordsFromLocalStorage();
-    });
+onMounted(() => {
+    loadWordsFromLocalStorage();
+});
+
+const getRandomWord = (): Word | null => {
+    if (words.value.length === 0) return null;
+    const randomIndex = Math.floor(Math.random() * words.value.length);
+    return words.value[randomIndex];
 }
 
 return {
@@ -58,4 +62,5 @@ return {
     deleteWord,
     updateWord,
     loadWordsFromLocalStorage,
+    getRandomWord
 };});
