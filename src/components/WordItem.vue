@@ -1,30 +1,55 @@
 <script setup lang="ts">
 
 import { Word } from '@/types/words';
-import { computed } from 'vue';
+import {  ref, watch } from 'vue';
 
 interface Props {
     word: Word;
-}
+  }
+  
+const props = defineProps<Props>();
+
+const isEditing = ref<boolean>(false);
+const localWord = ref<Word>(props.word);
 
 const emit = defineEmits<{
     (e: 'delete-word', id: string): void;
+    (e: 'update-word', id: string, word: string, meaning: string): void;
 }>();
 
 const handleDelete = () => {
     emit('delete-word', props.word.id);
 };
 
-const wordAndMeaning = computed(() => {
-    return `${props.word.word} : ${props.word.meaning}`;
-})
-const props = defineProps<Props>();
+const handleUpdate = () => {
+    isEditing.value = !isEditing.value;
+};
+
+const handleConfirmUpdate = () => {
+    emit('update-word', props.word.id, localWord.value.word.trim(), localWord.value.meaning.trim());
+    isEditing.value = false;
+};
+
+watch(()=> props.word, (newWord) => {
+    localWord.value = newWord;
+});
 
 </script>
 <template>
     <div class="word-item">
-        {{ wordAndMeaning }}
-        <button class="delete-btn" @click="handleDelete">x</button>
+      <div class="word-content" v-if="isEditing">
+        <input v-model="localWord.word" placeholder="Kelime girin" />
+        <input v-model="localWord.meaning" placeholder="Anlam girin" />
+      </div>
+      <div class="word-content" v-else>
+        <h2 class="word-text">{{ props.word.word }}</h2>
+        <p class="word-meaning">{{ props.word.meaning }}</p>
+      </div>
+        <div class="action-buttons">
+          <button v-if="isEditing" class="updateConfirm-btn" @click="handleConfirmUpdate">✔</button>
+          <button v-if="!isEditing" class="update-btn" @click="handleUpdate">🖋</button>
+          <button v-if="!isEditing" class="delete-btn" @click="handleDelete">x</button>
+        </div>
     </div>
 </template>
 <style scoped>
@@ -75,10 +100,9 @@ const props = defineProps<Props>();
   flex-wrap: wrap;
 }
 
-.delete-btn {
+.action-buttons button {
   background: transparent;
   border: none;
-  color: #e74c3c;
   font-size: 2rem;
   line-height: 1;
   cursor: pointer;
@@ -92,7 +116,18 @@ const props = defineProps<Props>();
   transition: background-color 0.2s;
   flex-shrink: 0;
 }
+
+.delete-btn {
+  color: #e74c3c;
+}
 .delete-btn:hover {
   background: rgba(231, 76, 60, 0.1);
+}
+.update-btn {
+  font-size: 20px !important;
+  color: #f8f554;
+}
+.update-btn:hover {
+  background: rgba(231, 163, 60, 0.1);
 }
 </style>

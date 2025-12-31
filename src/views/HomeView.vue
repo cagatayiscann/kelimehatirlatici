@@ -27,6 +27,15 @@ const deleteWord = (id: string) => {
     saveWordsToLocalStorage();
 };
 
+const updateWord = (id: string, updatedWord: string, updatedMeaning: string) => {
+    const index = words.value.findIndex(word => word.id === id);
+    if (index !== -1) {
+        words.value[index].word = updatedWord;
+        words.value[index].meaning = updatedMeaning;
+        saveWordsToLocalStorage();
+    }
+};
+
 const saveWordsToLocalStorage = () => {
     localStorage.setItem('words', JSON.stringify(words.value));
 };
@@ -54,7 +63,7 @@ if (words.value.length === 0) {
     <H1>Home View</H1>
     <WordForm @add-word="addWord" />
     <div>
-        <WordItem v-for="word in words" :key="word.id" :word="word" v-on:delete-word="deleteWord"/>
+        <WordItem v-for="word in words" :key="word.id" :word="word" v-on:delete-word="deleteWord" v-on:update-word="updateWord"/>
     </div>
 </MainLayout></template>
 <style scoped>

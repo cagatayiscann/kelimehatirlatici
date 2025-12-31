@@ -11,6 +11,8 @@ const emit = defineEmits<{
 
 const handleSubmit = () => {
     emit('add-word', word.value, meaning.value);
+    word.value = '';
+    meaning.value = '';
 };
 
 </script>
@@ -35,6 +37,10 @@ const handleSubmit = () => {
   margin-top: 0;
   margin-bottom: 1.5rem;
   color: var(--color-heading);
+}
+
+.word-form input {
+  margin-bottom: 1rem;
 }
 
 .form-group {
