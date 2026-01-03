@@ -2,7 +2,6 @@
 import H1 from '@/components/H1.vue'
 import MainLayout from '@/layouts/MainLayout.vue'
 import { useWordStore } from '@/stores/word.store'
-import { disposePinia } from 'pinia'
 import { onMounted, ref } from 'vue'
 
 const wordStore = useWordStore()

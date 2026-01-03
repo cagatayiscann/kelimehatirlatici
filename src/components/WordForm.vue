@@ -8,6 +8,7 @@ export interface CreateWordDTO {
 }
 
 const word = ref<CreateWordDTO>({ word: '', meaning: ''});
+const wordInputRef = ref<HTMLInputElement | null>(null);
 
 
 
@@ -18,13 +19,14 @@ const emit = defineEmits<{
 const handleSubmit = () => {
     emit('add-word', word.value.word, word.value.meaning);
     word.value = { word: '', meaning: '' };
+    wordInputRef.value?.focus();
 };
 
 </script>
 <template>
 <div class="word-form">
         <form class="form-group" @submit.prevent="handleSubmit">
-            <input v-model="word.word" placeholder="Kelime girin" />
+            <input ref="wordInputRef" v-model="word.word" placeholder="Kelime girin" />
             <input v-model="word.meaning" placeholder="Anlamını girin" />
             <button type="submit">Ekle</button>
         </form>
