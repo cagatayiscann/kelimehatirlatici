@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Word } from '@/types/words';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 
 export interface CreateWordDTO {
   word: string
@@ -21,6 +21,10 @@ const handleSubmit = () => {
     word.value = { word: '', meaning: '' };
     wordInputRef.value?.focus();
 };
+
+onMounted(() => {
+    wordInputRef.value?.focus();
+});
 
 </script>
 <template>

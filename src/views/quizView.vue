@@ -7,8 +7,8 @@ import { onMounted, ref } from 'vue'
 const wordStore = useWordStore()
 
 interface Score {
-    questions: number
-    correct: number
+  questions: number
+  correct: number
 }
 
 const quizWord = ref(null)
@@ -16,9 +16,11 @@ const userAnswer = ref('')
 const showWord = ref(false)
 const score = ref<Score>({ questions: 0, correct: 0 })
 const submitDisabled = ref(false)
+const inputRef = ref<HTMLInputElement | null>(null)
 
 onMounted(() => {
   quizWord.value = wordStore.getRandomWord()
+  inputRef.value?.focus()
 })
 
 const handleCheckAnswer = () => {
@@ -31,6 +33,9 @@ const handleCheckAnswer = () => {
     alert('Correct!')
     score.value.correct += 1
     submitDisabled.value = true
+    quizWord.value = wordStore.getRandomWord()
+    userAnswer.value = ''
+    inputRef.value?.focus()
   } else {
     alert('Try again!')
   }
@@ -46,24 +51,25 @@ const handleCheckAnswer = () => {
             <h2 v-show="showWord">{{ quizWord.word }}</h2>
             <p>{{ quizWord.meaning }}</p>
             <input
+            ref="inputRef"
             v-model="userAnswer"
             type="text"
-            placeholder="Your answer here"
+            placeholder="Cevabınızı girin"
             />
-            <button @click="handleCheckAnswer" :disabled="submitDisabled">Submit</button>
+            <button @click="handleCheckAnswer" :disabled="submitDisabled">Onayla</button>
               </div>
-              <button @click="showWord = !showWord">Show / Hide Word</button>
+              <button @click="showWord = !showWord">Göster / Gizle</button>
               <button @click="
           quizWord = wordStore.getRandomWord();
           userAnswer = '';
           showWord = false;
           submitDisabled = false;
-              ">Next Word</button>
+              ">Sonraki kelime</button>
       </div>
     <div class="score-board">
       <h2>Score Board</h2>
-      <p>Questions Answered: {{ score.questions }}</p>
-      <p>Correct Answers: {{ score.correct }}</p>
+      <p>Cevaplanan Sorular: {{ score.questions }}</p>
+      <p>Doğru Cevaplar: {{ score.correct }}</p>
     </div>
   </MainLayout>
 </template>
